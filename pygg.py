@@ -44,10 +44,6 @@ def main(stdscr):
     worksheet = wb[selected_sheet]
     max_row = worksheet.max_row
     delay_s = worksheet['G1'].value * 1000
-    stdscr.clear()
-    stdscr.addstr(0, 20, f"NOW PLAYING {selected_sheet}")
-    stdscr.addstr(1, 20, f"DELAY {delay_s} SECONDS")
-    stdscr.refresh()
     # Iterate over all cells in column A and load/play their values
 
     # Collect all values in column A
@@ -55,8 +51,17 @@ def main(stdscr):
         cell_value = worksheet[f'A{row}'].value
         if cell_value is not None:
             column_a_values.append(cell_value)
-    # Play each music file sequentially
-    for file_path in column_a_values:
+    #for file_path in column_a_values:
+    for idx, file_path in enumerate(column_a_values):
+        stdscr.clear()
+        stdscr.addstr(f"NOW PLAYING {selected_sheet}\n")
+        stdscr.addstr(f"DELAY {delay_s} SECONDS\n")
+        for i, fp in enumerate(column_a_values):
+            if i == idx:
+                stdscr.addstr(f"* {fp}\n")
+            else:
+                stdscr.addstr(f"  {fp}\n")
+        stdscr.refresh()
         #play_music(file_path)
         pygame.mixer.music.load(file_path)
         pygame.mixer.music.play()
